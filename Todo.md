@@ -1,5 +1,5 @@
 // Frontend //
-[NOT-COMPLETED] Main Menu
+[COMPLETED] Main Menu
 [NOT-COMPLETED] Login/Signup
 [NOT-COMPLETED] Character selection
 [NOT-COMPLETED] Battlefield(s)

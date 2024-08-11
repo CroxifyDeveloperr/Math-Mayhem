@@ -1,0 +1,12 @@
+# --- FRONTENT --- #
+[] Main menu
+[] Character selection
+[] Point screen
+[] Leaderbaord
+
+# --- BACKEND --- #
+[] Combat system
+[] Database
+
+# --- MISC --- #
+[] Character Creation

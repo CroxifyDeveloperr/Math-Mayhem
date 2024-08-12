@@ -1,12 +1,15 @@
 # --- FRONTENT --- #
-[] Main menu
-[] Character selection
-[] Point screen
-[] Leaderbaord
+[✔️] Main menu [12/08/2024]
+[✔️] Character selection [12/08/2024]
+[❌] Battleground
+[❌] Rewards screen
+[❌] Leaderbaord
 
 # --- BACKEND --- #
-[] Combat system
-[] Database
+[❌] Combat system
+[❌] Rewards system
+[❌] Database
+    NOTE: Must use stacks and queues.
 
 # --- MISC --- #
-[] Character Creation
+[✔️] Character Creation [12/08/2024]

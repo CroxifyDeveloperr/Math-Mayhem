@@ -7,17 +7,20 @@ This file is responsible for all the UI seen throughout the program and doesn't 
 ## LIBRARIES ##
 #########################
 import customtkinter as ctk
+from PIL import Image, ImageTk
 
 
 #########################
 ## FILES ##
 #########################
-from Enums import StyleEnum
+import StyleEnum
+from PageSwapper import SwapPage
 
 
 #########################
 ## VARIABLES ##
 #########################
+
 
 
 #########################
@@ -30,6 +33,17 @@ TEXT_COLOR = StyleEnum.TEXT_COLOR
 BUTTON_HOVER_COLOR = StyleEnum.BUTTON_HOVER_COLOR
 BORDER_WIDTH = StyleEnum.BORDER_WIDTH
 CORNER_RADIUS = StyleEnum.CORNER_RADIUS
+
+CHARACTER_ONE_IMAGE_PATH = "Images\BiggieCheese.png"
+CHARACTER_TWO_IMAGE_PATH = "Images\Mike.png"
+CHARACTER_THREE_IMAGE_PATH = "Images\Russlle.png"
+
+character_one_image = Image.open(CHARACTER_ONE_IMAGE_PATH)
+character_two_image = Image.open(CHARACTER_TWO_IMAGE_PATH)
+character_three_image = Image.open(CHARACTER_THREE_IMAGE_PATH)
+resized_character_one_image = character_one_image.resize((200, 350))
+resized_character_two_image = character_two_image.resize((200, 350))
+resized_character_three_image = character_three_image.resize((200, 350))
 
 
 #########################
@@ -55,18 +69,20 @@ class Program(ctk.CTk):
         This function creates the window used for the program and begins the process of customizing it.
         Pages are also created, with the relvant page being displayed while the rest are stored away.
         """
+        
         super().__init__()
         self.title("Math Mayhem")
         self.geometry("800x700")
         self.resizable(False, False)
 
-        main_menu_page = MainMenu(self)
-        character_selection_page = CharacterSelection(self)
-        battleground_page = Battleground(self)
-        result_screen = ResultScreen(self)
-        leaderboard = Leaderboard(self)
+        self.main_menu_page = MainMenu(self)
+        self.character_selection_page = CharacterSelection(self)
+        self.battleground_page = Battleground(self)
+        self.result_page = ResultScreen(self)
+        self.leaderboard_page = Leaderboard(self)
 
-        main_menu_page.pack()
+        self.main_menu_page.pack()
+        #self.battleground_page.pack()
 
 
 
@@ -99,7 +115,8 @@ class MainMenu(ctk.CTkFrame):
         ABOUT THIS FUNCTION:
         This function takes the created frame and adds widgets to them. These widgets are then customized.
         """
-        title_frame = ctk.CTkFrame(
+        
+        self.title_frame = ctk.CTkFrame(
             master = self,
             width = 400,
             height = 100,
@@ -107,18 +124,19 @@ class MainMenu(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
-        ).place(relx=0.5, rely=0.15, anchor="center")
+        )
+        self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
 
         title = ctk.CTkLabel(
-            master = title_frame,
+            master = self.title_frame,
             text = "Math Mayhem",
             text_color = TEXT_COLOR,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             font = ("Arial", 32, "bold")
-        ).place(relx=0.5, rely=0.15, anchor="center")
+        ).place(relx=0.5, rely=0.5, anchor="center")
 
-        control_frame = ctk.CTkFrame(
+        self.control_frame = ctk.CTkFrame(
             master = self,
             width = 400,
             height = 500,
@@ -126,10 +144,11 @@ class MainMenu(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
-        ).place(relx=0.5, rely=0.6125, anchor="center")
+        )
+        self.control_frame.place(relx=0.5, rely=0.6125, anchor="center")
 
         play_button = ctk.CTkButton(
-            master = control_frame,
+            master = self.control_frame,
             text = "Play",
             font = ("Arial", 24, "bold"),
             text_color = TEXT_COLOR,
@@ -140,11 +159,11 @@ class MainMenu(ctk.CTkFrame):
             hover_color = BUTTON_HOVER_COLOR,
             width = 200,
             height = 75,
-            command = None
-        ).place(relx=0.5, rely=0.45, anchor="center")
+            command = lambda: SwapPage(pageToAdd = program.character_selection_page, pageToRemove = program.main_menu_page)
+        ).place(relx=0.5, rely=0.25, anchor="center")
 
         Leaderboard_button = ctk.CTkButton(
-            master = control_frame,
+            master = self.control_frame,
             text = "Leaderboard",
             font = ("Arial", 24, "bold"),
             text_color = TEXT_COLOR,
@@ -156,10 +175,10 @@ class MainMenu(ctk.CTkFrame):
             width = 200,
             height = 75,
             command = None
-        ).place(relx=0.5, rely=0.6, anchor="center")
+        ).place(relx=0.5, rely=0.5, anchor="center")
 
         quit_button = ctk.CTkButton(
-            master = control_frame,
+            master = self.control_frame,
             text = "Quit",
             font = ("Arial", 24, "bold"),
             text_color = TEXT_COLOR,
@@ -174,6 +193,7 @@ class MainMenu(ctk.CTkFrame):
         ).place(relx=0.5, rely=0.75, anchor="center")
 
 
+
 class CharacterSelection(ctk.CTkFrame):
     """
     ABOUT THIS CLASS:
@@ -186,15 +206,106 @@ class CharacterSelection(ctk.CTkFrame):
         This function is a constructor, meaning it will fire automatically when an object of the character selection class is created.
         This function creates the inital frame which can later be built.
         """
-        pass
+        super().__init__(
+            master = parent,
+            width = 800,
+            height = 700,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH
+        )
+        self.Build()
      
-    
+    def SetupCombat(self, selected_character: str):
+        """
+        ABOUT THIS FUNCTION:
+        This function has two purposes:
+            1. To send the Player's selected character over to CombatHandler.
+            2. To invoke the SwapPage function so that the Player can see the battlefield and begin fighting.
+        """
+        pass
+
     def Build(self):
         """
         ABOUT THIS FUNCTION:
         This function takes the created frame and adds widgets to them. These widgets are then customized.
         """
-        pass
+
+        self.title_frame = ctk.CTkFrame(
+            master = self,
+            width = 400,
+            height = 100,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+            corner_radius = CORNER_RADIUS,
+        )
+        self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
+
+        title = ctk.CTkLabel(
+            master = self.title_frame,
+            text = "Character Selection",
+            text_color = TEXT_COLOR,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            font = ("Arial", 32, "bold")
+        ).place(relx=0.5, rely=0.5, anchor="center")
+
+        back_button = ctk.CTkButton(
+            master = self,
+            width = 125,
+            height = 75,
+            text = "Back",
+            font = ("Arial", 16, "bold"),
+            command = lambda: SwapPage(pageToAdd = program.main_menu_page, pageToRemove = program.character_selection_page),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+            corner_radius = CORNER_RADIUS,
+            hover_color = BUTTON_HOVER_COLOR
+        ).place(relx=0.875, rely=0.15, anchor="center")
+
+        self.character_one = ctk.CTkButton(
+            master = self,
+            width = 200,
+            height = 400,
+            text = "",
+            command = None,
+            image = ImageTk.PhotoImage(resized_character_one_image),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+            corner_radius = CORNER_RADIUS,
+            hover_color = BUTTON_HOVER_COLOR
+        ).place(relx=0.2, rely=0.6, anchor="center")
+
+        self.character_two = ctk.CTkButton(
+            master = self,
+            width = 200,
+            height = 400,
+            text = "",
+            command = None,
+            image = ImageTk.PhotoImage(resized_character_two_image),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+            corner_radius = CORNER_RADIUS,
+            hover_color = BUTTON_HOVER_COLOR
+        ).place(relx=0.5, rely=0.6, anchor="center")
+
+        self.character_three_frame = ctk.CTkButton(
+            master = self,
+            width = 200,
+            height = 400,
+            text = "",
+            command = None,
+            image = ImageTk.PhotoImage(resized_character_three_image),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+            corner_radius = CORNER_RADIUS,
+            hover_color = BUTTON_HOVER_COLOR
+        ).place(relx=0.8, rely=0.6, anchor="center")
 
 
 
@@ -210,7 +321,15 @@ class Battleground(ctk.CTkFrame):
         This function is a constructor, meaning it will fire automatically when an object of the battleground class is created.
         This function creates the inital frame which can later be built.
         """
-        pass
+        super().__init__(
+            master = parent,
+            width = 800,
+            height = 700,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH
+        )
+        self.Build()
      
     
     def Build(self):
@@ -219,6 +338,7 @@ class Battleground(ctk.CTkFrame):
         This function takes the created frame and adds widgets to them. These widgets are then customized.
         """
         pass
+
     
 
 

@@ -7,6 +7,7 @@ This file is responsible for all the UI seen throughout the program and doesn't 
 ## LIBRARIES ##
 #########################
 import customtkinter as ctk
+import random, Backend
 from PIL import Image, ImageTk
 
 
@@ -15,12 +16,6 @@ from PIL import Image, ImageTk
 #########################
 import StyleEnum
 from PageSwapper import SwapPage
-
-
-#########################
-## VARIABLES ##
-#########################
-
 
 
 #########################
@@ -38,17 +33,41 @@ CHARACTER_ONE_IMAGE_PATH = "Images\BiggieCheese.png"
 CHARACTER_TWO_IMAGE_PATH = "Images\Mike.png"
 CHARACTER_THREE_IMAGE_PATH = "Images\Russlle.png"
 
+BATTLEGROUND_BEACH_BACKGROUND_IMAGE_PATH = "Images\BeachBackground.png"
+BATTLEGROUND_DESERT_BACKGROUND_IMAGE_PATH = "Images\DesertBackground.png"
+BATTLEGROUND_FORREST_BACKGROUND_IMAGE_PATH = "Images\ForrestBackground.png"
+
+#########################
+## VARIABLES ##
+#########################
 character_one_image = Image.open(CHARACTER_ONE_IMAGE_PATH)
 character_two_image = Image.open(CHARACTER_TWO_IMAGE_PATH)
 character_three_image = Image.open(CHARACTER_THREE_IMAGE_PATH)
+
+beach_background_image = Image.open(BATTLEGROUND_BEACH_BACKGROUND_IMAGE_PATH)
+desert_background_image = Image.open(BATTLEGROUND_DESERT_BACKGROUND_IMAGE_PATH)
+forrest_background_image = Image.open(BATTLEGROUND_FORREST_BACKGROUND_IMAGE_PATH)
+
 resized_character_one_image = character_one_image.resize((200, 350))
 resized_character_two_image = character_two_image.resize((200, 350))
 resized_character_three_image = character_three_image.resize((200, 350))
+
+resized_beach_background_image = beach_background_image.resize((800, 500))
+resized_desert_background_image = desert_background_image.resize((800, 500))
+resized_forrest_background_image = forrest_background_image.resize((800, 500))
 
 
 #########################
 ## PRIVATE FUNCTIONS ##
 #########################
+def BackgroundPicker() -> ctk.CTkImage:
+    """
+    ABOUT THIS FUNCTION:
+    This function picks a random image from an array and assigns it as the background to the battlefield.
+    """
+    backgrounds = [resized_beach_background_image, resized_desert_background_image, resized_forrest_background_image]
+    background = backgrounds[random.randint(0, len(backgrounds)-1)]
+    return background
 
 
 #########################
@@ -81,8 +100,8 @@ class Program(ctk.CTk):
         self.result_page = ResultScreen(self)
         self.leaderboard_page = Leaderboard(self)
 
-        self.main_menu_page.pack()
-        #self.battleground_page.pack()
+        # self.main_menu_page.pack()
+        self.battleground_page.pack()
 
 
 
@@ -331,15 +350,120 @@ class Battleground(ctk.CTkFrame):
         )
         self.Build()
      
+    def TestSubmit(self):
+        print(self.answer_storage.get())
+        
     
     def Build(self):
         """
         ABOUT THIS FUNCTION:
         This function takes the created frame and adds widgets to them. These widgets are then customized.
         """
-        pass
+        
+        self.background_frame = ctk.CTkFrame(
+            master = self,
+            width = 800,
+            height = 500,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH
+        )
+        self.background_frame.place(relx=0.5, rely=0.36, anchor="center")
 
-    
+        background_holder = ctk.CTkLabel(
+            master = self.background_frame,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            text = "",
+            image = ImageTk.PhotoImage(BackgroundPicker())
+        ).place(relx=0.5, rely=0.5, anchor="center")
+
+        self.control_frame = ctk.CTkFrame(
+            master = self,
+            width = 800,
+            height = 200,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+        )
+        self.control_frame.place(relx=0.5, rely=0.8575, anchor="center")
+
+        self.question_frame = ctk.CTkFrame(
+            master = self.control_frame,
+            width = 800,
+            height = 200,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+        )
+        self.question_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.player_character_frame = ctk.CTkFrame(
+            master = self.background_frame,
+            width = 125,
+            height = 125,
+        )
+        self.player_character_frame.place(relx=0.15, rely=0.7, anchor="center")
+
+        self.player_character_image = ctk.CTkLabel(
+            master = self.player_character_frame,
+            width = 150,
+            height = 150,
+            text = "",
+            image = None # Call the backend to get the Player's chosen character.
+        )
+        self.player_character_image.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.computer_character_frame = ctk.CTkFrame(
+            master = self.background_frame,
+            width = 125,
+            height = 125,
+        )
+        self.computer_character_frame.place(relx=0.85, rely=0.7, anchor="center")
+
+        self.computer_character_image = ctk.CTkLabel(
+            master = self.player_character_frame,
+            width = 150,
+            height = 150,
+            text = "",
+            image = None # Call the backend to get the Player's chosen character.
+        )
+
+        self.question_label = ctk.CTkLabel(
+            master = self.question_frame,
+            text = "Test",
+            font = ("Arial", 32, "bold"),
+            text_color = TEXT_COLOR
+        )
+        self.question_label.place(relx=0.5, rely=0.2, anchor="center")
+
+        self.answer_storage = ctk.StringVar()
+
+        self.answer_entry = ctk.CTkEntry(
+            master = self.question_frame,
+            textvariable = self.answer_storage,
+            width = 150,
+            height = 40,
+            font = ("Arial", 16, "bold"),
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
+        )
+        self.answer_entry.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.submit_button = ctk.CTkButton(
+            master = self.question_frame,
+            text = "Submit Answer",
+            font = ("Arial", 16, "bold"),
+            width = 25,
+            height = 50,
+            command = self.TestSubmit,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_color = BORDER_COLOR,
+            border_width = BORDER_WIDTH,
+            hover_color = BUTTON_HOVER_COLOR
+        )
+        self.submit_button.place(relx=0.5, rely=0.8, anchor="center")
 
 
 class ResultScreen(ctk.CTkFrame):

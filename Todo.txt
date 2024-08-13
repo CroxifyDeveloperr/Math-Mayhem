@@ -1,7 +1,7 @@
 # --- FRONTENT --- #
 [✔️] Main menu [12/08/2024]
 [✔️] Character selection [12/08/2024]
-[❌] Battleground
+[✔️] Battleground [13/08/2024]
 [❌] Rewards screen
 [❌] Leaderbaord
 

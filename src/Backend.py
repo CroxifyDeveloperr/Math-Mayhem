@@ -150,15 +150,6 @@ def ValidateAnswer(battleground, answer_storage: ctk.StringVar, answer: str):
         messagebox.showerror("Error", exception)
 
 
-def CreateRewards(program, winner: str):
-    """
-    ABOUT THIS FUNCTION:
-    This function invokes a change in pages, resulting in the page going from a battlefield to a rewards screen.
-    This function will inform the Player of their loss/win and how many points they've gained from it.
-    """
-    pass
-
-
 def BeginCombat(program) -> None:
     """
     ABOUT THIS FUNCTION:
@@ -169,7 +160,7 @@ def BeginCombat(program) -> None:
     """
 
     winner = ""
-    while player.health > 0:
+    while True:
 
         # Checking if the Player's or the computer's character is unable to continue.
         if computer.health == 0:
@@ -180,13 +171,22 @@ def BeginCombat(program) -> None:
             break
 
         # Damaging the Player a random amount each second.
-        time.sleep(1)
+        time.sleep(2)
         if random.randint(1, 10) <= 8:
             player.Damage()
             program.battleground_page.player_health.configure(text = f"Health: {player.health}")
-        
+
+    # Creating rewards & updated label messages.
+    result_message = f"{winner} wins!"
+
+    reward_message = ""
+    if winner == "Player":
+        reward_message = f"Reward: {random.randint(5, 15)} points"
+    elif winner == "Computer":
+        reward_message = f"Reward: 0 points"
+
     SwapPage(pageToAdd = program.result_page, pageToRemove = program.battleground_page)
-    
+    program.result_page.CreateRewards(result_message, reward_message)
 
 
 def SetupCombat(program):

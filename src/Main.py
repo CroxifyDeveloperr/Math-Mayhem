@@ -559,6 +559,11 @@ class ResultScreen(ctk.CTkFrame):
         self.Build()
      
     
+    def CreateRewards(self, result_message, reward_message):
+        self.result.configure(text = result_message)
+        self.reward.configure(text = reward_message)
+
+
     def Build(self):
         """
         ABOUT THIS FUNCTION:

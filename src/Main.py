@@ -7,14 +7,14 @@ This file is responsible for all the UI seen throughout the program and doesn't 
 ## LIBRARIES ##
 #########################
 import customtkinter as ctk
-import random, Backend
+import random, time
 from PIL import Image, ImageTk
 
 
 #########################
 ## FILES ##
 #########################
-import StyleEnum
+import StyleEnum, Backend
 from PageSwapper import SwapPage
 
 
@@ -43,6 +43,12 @@ BATTLEGROUND_FORREST_BACKGROUND_IMAGE_PATH = "Images\ForrestBackground.png"
 character_one_image = Image.open(CHARACTER_ONE_IMAGE_PATH)
 character_two_image = Image.open(CHARACTER_TWO_IMAGE_PATH)
 character_three_image = Image.open(CHARACTER_THREE_IMAGE_PATH)
+
+characters = {
+    "CharacterOne" : character_one_image,
+    "CharacterTwo" : character_two_image,
+    "CharacterThree" : character_three_image
+}
 
 beach_background_image = Image.open(BATTLEGROUND_BEACH_BACKGROUND_IMAGE_PATH)
 desert_background_image = Image.open(BATTLEGROUND_DESERT_BACKGROUND_IMAGE_PATH)
@@ -100,8 +106,8 @@ class Program(ctk.CTk):
         self.result_page = ResultScreen(self)
         self.leaderboard_page = Leaderboard(self)
 
-        # self.main_menu_page.pack()
-        self.battleground_page.pack()
+        self.main_menu_page.pack()
+        # self.result_page.pack()
 
 
 
@@ -235,14 +241,19 @@ class CharacterSelection(ctk.CTkFrame):
         )
         self.Build()
      
+
     def SetupCombat(self, selected_character: str):
         """
         ABOUT THIS FUNCTION:
         This function has two purposes:
             1. To send the Player's selected character over to CombatHandler.
             2. To invoke the SwapPage function so that the Player can see the battlefield and begin fighting.
+            3. To send relevant information to the backend / combat handler.
         """
-        pass
+        Backend.PlayerCharacterSelected(character_name = selected_character)
+        Backend.ChooseComputerCharacter(player_character = selected_character)
+        Backend.SetupCombat(program)
+
 
     def Build(self):
         """
@@ -289,7 +300,7 @@ class CharacterSelection(ctk.CTkFrame):
             width = 200,
             height = 400,
             text = "",
-            command = None,
+            command = lambda: self.SetupCombat(selected_character = "CharacterOne"),
             image = ImageTk.PhotoImage(resized_character_one_image),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
@@ -303,7 +314,7 @@ class CharacterSelection(ctk.CTkFrame):
             width = 200,
             height = 400,
             text = "",
-            command = None,
+            command = lambda: self.SetupCombat(selected_character = "CharacterTwo"),
             image = ImageTk.PhotoImage(resized_character_two_image),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
@@ -317,7 +328,7 @@ class CharacterSelection(ctk.CTkFrame):
             width = 200,
             height = 400,
             text = "",
-            command = None,
+            command = lambda: self.SetupCombat(selected_character = "CharacterThree"),
             image = ImageTk.PhotoImage(resized_character_three_image),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
@@ -349,11 +360,9 @@ class Battleground(ctk.CTkFrame):
             border_width = BORDER_WIDTH
         )
         self.Build()
-     
-    def TestSubmit(self):
-        print(self.answer_storage.get())
-        
-    
+        self.SetupProblem()
+
+
     def Build(self):
         """
         ABOUT THIS FUNCTION:
@@ -398,6 +407,46 @@ class Battleground(ctk.CTkFrame):
         )
         self.question_frame.place(relx=0.5, rely=0.5, anchor="center")
 
+        self.player_name = ctk.CTkLabel(
+            master = self.question_frame,
+            text = "PLAYER_NAME",
+            font = ("Arial", 24, "bold"),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            text_color = TEXT_COLOR
+        )
+        self.player_name.place(relx=0.15, rely=0.25, anchor="center")
+
+        self.player_health = ctk.CTkLabel(
+            master = self.question_frame,
+            text = "PLAYER_HEALTH",
+            font = ("Arial", 16, "bold"),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            text_color = TEXT_COLOR
+        )
+        self.player_health.place(relx=0.15, rely=0.45, anchor="center")
+
+        self.computer_name = ctk.CTkLabel(
+            master = self.question_frame,
+            text = "COMPUTER_NAME",
+            font = ("Arial", 24, "bold"),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            text_color = TEXT_COLOR
+        )
+        self.computer_name.place(relx=0.85, rely=0.25, anchor="center")
+
+        self.computer_health = ctk.CTkLabel(
+            master = self.question_frame,
+            text = "COMPUTER_HEALTH",
+            font = ("Arial", 16, "bold"),
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            text_color = TEXT_COLOR
+        )
+        self.computer_health.place(relx=0.85, rely=0.45, anchor="center")
+
         self.player_character_frame = ctk.CTkFrame(
             master = self.background_frame,
             width = 125,
@@ -410,7 +459,7 @@ class Battleground(ctk.CTkFrame):
             width = 150,
             height = 150,
             text = "",
-            image = None # Call the backend to get the Player's chosen character.
+            image = None
         )
         self.player_character_image.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -422,12 +471,13 @@ class Battleground(ctk.CTkFrame):
         self.computer_character_frame.place(relx=0.85, rely=0.7, anchor="center")
 
         self.computer_character_image = ctk.CTkLabel(
-            master = self.player_character_frame,
+            master = self.computer_character_frame,
             width = 150,
             height = 150,
             text = "",
-            image = None # Call the backend to get the Player's chosen character.
+            image = None
         )
+        self.computer_character_image.place(relx=0.5, rely=0.5, anchor="center")
 
         self.question_label = ctk.CTkLabel(
             master = self.question_frame,
@@ -437,7 +487,7 @@ class Battleground(ctk.CTkFrame):
         )
         self.question_label.place(relx=0.5, rely=0.2, anchor="center")
 
-        self.answer_storage = ctk.StringVar()
+        self.answer_storage = ctk.StringVar(master = self)
 
         self.answer_entry = ctk.CTkEntry(
             master = self.question_frame,
@@ -456,7 +506,7 @@ class Battleground(ctk.CTkFrame):
             font = ("Arial", 16, "bold"),
             width = 25,
             height = 50,
-            command = self.TestSubmit,
+            command = self.SubmitAnswer,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             border_color = BORDER_COLOR,
@@ -464,6 +514,25 @@ class Battleground(ctk.CTkFrame):
             hover_color = BUTTON_HOVER_COLOR
         )
         self.submit_button.place(relx=0.5, rely=0.8, anchor="center")
+
+        self.answer_status = ctk.CTkLabel(
+            master = self.question_frame,
+            text = "",
+            font = ("Arial", 16),
+            text_color = TEXT_COLOR
+        )
+        self.answer_status.place(relx=0.65, rely=0.5, anchor="center")
+
+
+    def SetupProblem(self):
+        problem, self.answer = Backend.GenerateProblem()
+        self.question_label.configure(text = f"{problem} = ?")
+
+    
+    def SubmitAnswer(self):
+        Backend.ValidateAnswer(self, self.answer_entry, self.answer)
+        self.SetupProblem()
+        
 
 
 class ResultScreen(ctk.CTkFrame):
@@ -478,7 +547,16 @@ class ResultScreen(ctk.CTkFrame):
         This function is a constructor, meaning it will fire automatically when an object of the result screen class is created.
         This function creates the inital frame which can later be built.
         """
-        pass
+
+        super().__init__(
+            master = parent,
+            width = 800,
+            height = 700,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH
+        )
+        self.Build()
      
     
     def Build(self):
@@ -486,7 +564,38 @@ class ResultScreen(ctk.CTkFrame):
         ABOUT THIS FUNCTION:
         This function takes the created frame and adds widgets to them. These widgets are then customized.
         """
-        pass
+
+        self.result = ctk.CTkLabel(
+            master = self,
+            text = "RESULT",
+            font = ("Arial", 72, "bold"),
+            text_color = TEXT_COLOR
+        )
+        self.result.place(relx=0.5, rely=0.3, anchor="center")
+
+        self.reward = ctk.CTkLabel(
+            master = self,
+            text = "REWARD",
+            font = ("Arial", 36),
+            text_color = TEXT_COLOR
+        )
+        self.reward.place(relx=0.5, rely=0.5, anchor="center")
+
+        continue_button = ctk.CTkButton(
+            master = self,
+            text = "Continue",
+            font = ("Arial", 24),
+            width = 150,
+            height = 50,
+            command = lambda: SwapPage(pageToAdd = program.main_menu_page, pageToRemove = program.result_page),
+            text_color = TEXT_COLOR,
+            fg_color = BACKGROUND_COLOR,
+            bg_color = BACKGROUND_COLOR,
+            border_color = BORDER_COLOR,
+            border_width = BORDER_WIDTH,
+            hover_color = BUTTON_HOVER_COLOR
+        )
+        continue_button.place(relx=0.5, rely=0.75, anchor="center")
 
 
 

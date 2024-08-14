@@ -12,7 +12,6 @@ import customtkinter as ctk
 #########################
 ## FILES ##
 #########################
-from TypeChecker import CheckArgType
 
 
 #########################

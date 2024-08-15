@@ -104,7 +104,6 @@ class Program(ctk.CTk):
         self.character_selection_page = CharacterSelection(self)
         self.battleground_page = Battleground(self)
         self.result_page = ResultScreen(self)
-        self.leaderboard_page = Leaderboard(self)
 
         self.main_menu_page.pack()
         # self.result_page.pack()
@@ -164,13 +163,13 @@ class MainMenu(ctk.CTkFrame):
         self.control_frame = ctk.CTkFrame(
             master = self,
             width = 400,
-            height = 500,
+            height = 300,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
         )
-        self.control_frame.place(relx=0.5, rely=0.6125, anchor="center")
+        self.control_frame.place(relx=0.5, rely=0.55, anchor="center")
 
         play_button = ctk.CTkButton(
             master = self.control_frame,
@@ -185,22 +184,7 @@ class MainMenu(ctk.CTkFrame):
             width = 200,
             height = 75,
             command = lambda: SwapPage(pageToAdd = program.character_selection_page, pageToRemove = program.main_menu_page)
-        ).place(relx=0.5, rely=0.25, anchor="center")
-
-        Leaderboard_button = ctk.CTkButton(
-            master = self.control_frame,
-            text = "Leaderboard",
-            font = ("Arial", 24, "bold"),
-            text_color = TEXT_COLOR,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            hover_color = BUTTON_HOVER_COLOR,
-            width = 200,
-            height = 75,
-            command = None
-        ).place(relx=0.5, rely=0.5, anchor="center")
+        ).place(relx=0.5, rely=0.30, anchor="center")
 
         quit_button = ctk.CTkButton(
             master = self.control_frame,
@@ -215,7 +199,7 @@ class MainMenu(ctk.CTkFrame):
             width = 200,
             height = 75,
             command = quit
-        ).place(relx=0.5, rely=0.75, anchor="center")
+        ).place(relx=0.5, rely=0.7, anchor="center")
 
 
 
@@ -336,6 +320,37 @@ class CharacterSelection(ctk.CTkFrame):
             corner_radius = CORNER_RADIUS,
             hover_color = BUTTON_HOVER_COLOR
         ).place(relx=0.8, rely=0.6, anchor="center")
+
+        username_text = ctk.CTkLabel(
+            master = self,
+            text = "Insert Username:",
+            font = ("Arial", 24),
+            text_color = TEXT_COLOR
+        ).place(relx=0.2, rely=0.935, anchor="center")
+
+        self.username_entry_storage = ctk.StringVar(master = self)
+        
+        username_entry = ctk.CTkEntry(
+            master = self,
+            textvariable = self.username_entry_storage,
+            font = ("Arial", 16),
+            border_color = BORDER_COLOR
+        )
+        username_entry.place(relx=0.415, rely=0.92)
+
+        user_name_submission = ctk.CTkButton(
+            master = self,
+            text = "Submit",
+            command = lambda: Backend.ValidateInput(self.username_entry_storage.get()),
+            height = 50,
+            font = ("Arial", 16),
+            text_color = TEXT_COLOR,
+            border_color = BORDER_COLOR,
+            border_width = BORDER_WIDTH,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = BACKGROUND_COLOR,
+            hover_color = BUTTON_HOVER_COLOR
+        ).place(relx=0.8, rely = 0.935, anchor="center")
 
 
 
@@ -532,7 +547,7 @@ class Battleground(ctk.CTkFrame):
     def SubmitAnswer(self):
         Backend.ValidateAnswer(self, self.answer_entry, self.answer)
         self.SetupProblem()
-        
+
 
 
 class ResultScreen(ctk.CTkFrame):
@@ -586,13 +601,13 @@ class ResultScreen(ctk.CTkFrame):
         )
         self.reward.place(relx=0.5, rely=0.5, anchor="center")
 
-        continue_button = ctk.CTkButton(
+        exit_button = ctk.CTkButton(
             master = self,
-            text = "Continue",
+            text = "Exit",
             font = ("Arial", 24),
             width = 150,
             height = 50,
-            command = lambda: SwapPage(pageToAdd = program.main_menu_page, pageToRemove = program.result_page),
+            command = quit,
             text_color = TEXT_COLOR,
             fg_color = BACKGROUND_COLOR,
             bg_color = BACKGROUND_COLOR,
@@ -600,31 +615,7 @@ class ResultScreen(ctk.CTkFrame):
             border_width = BORDER_WIDTH,
             hover_color = BUTTON_HOVER_COLOR
         )
-        continue_button.place(relx=0.5, rely=0.75, anchor="center")
-
-
-
-class Leaderboard(ctk.CTkFrame):
-    """
-    ABOUT THIS CLASS:
-    This class is responsible for the creation and style of the leaderboard page.
-    """
-     
-    def __init__(self, parent):
-        """
-        ABOUT THIS FUNCTION:
-        This function is a constructor, meaning it will fire automatically when an object of the leaderboard class is created.
-        This function creates the inital frame which can later be built.
-        """
-        pass
-     
-    
-    def Build(self):
-        """
-        ABOUT THIS FUNCTION:
-        This function takes the created frame and adds widgets to them. These widgets are then customized.
-        """
-        pass
+        exit_button.place(relx=0.5, rely=0.75, anchor="center")
 
 
 

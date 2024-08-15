@@ -18,6 +18,7 @@ from PIL import Image, ImageTk
 import Main
 from PageSwapper import SwapPage
 from CharacterClass import Character
+from PlayerDataClass import PlayerData
 
 
 #########################
@@ -28,6 +29,7 @@ computer_info = {}
 
 player = Character(name = "Player")
 computer = Character(name = "Computer")
+player_data = PlayerData()
 
 
 #########################
@@ -113,6 +115,7 @@ def GenerateProblem() -> str:
         
     arithmitic_func = OPERATORS_DICT[operator]
     answer = arithmitic_func(num1, num2)
+    print(answer)
 
     return problem, answer
 
@@ -150,6 +153,46 @@ def ValidateAnswer(battleground, answer_storage: ctk.StringVar, answer: str):
         messagebox.showerror("Error", exception)
 
 
+def ValidateInput(user_input: str):
+    """
+    ABOUT THIS FUNCTION:
+    This function is responsible for the filtering of the user input, ensuring that the user isn't capable of crashing or exploiting the program.
+    """
+    try:
+        # Checking if the input was left empty.
+        if len(user_input) == 0:
+            raise Exception("Input cannot be empty.")
+        
+        # Checking if input is less than the minimum character limit.
+        elif len(user_input) < 3:
+            raise Exception("Input must contain at least 3 characters.")
+        
+        # Checking if input hasn't exceeded the 10 character limit.
+        elif len(user_input) > 10:
+            raise Exception("Input cannot exceed the 10 character limit.")
+        
+        # Checking if the input only contains alphabetical characters.
+        elif not user_input.isalpha():
+            raise Exception("Input can only contain alphabetical characters.")
+        
+    except Exception as exception:
+        messagebox.showerror("Error", exception)
+    
+    player_data.name = user_input
+
+
+def CleanUpCombat():
+    """
+    ABOUT THIS FUNCTION:
+    This function is responsible for cleaning up the backend after the battle is over.
+    This functino will reset certain properties, making the application replayable.
+    """
+
+    # Resetting character health.
+    player.health = 100
+    computer.health = 100
+
+
 def BeginCombat(program) -> None:
     """
     ABOUT THIS FUNCTION:
@@ -157,6 +200,7 @@ def BeginCombat(program) -> None:
     Combat will continue until either the Player's character or computer's character has no health left.
     This function is executed in a different thread so that both the Player and the computer can work at their own pace.
     This function also invokes the reward function once the winner has been decided.
+    If a reward were to be given, the Player's data will be automatically saved.
     """
 
     winner = ""
@@ -181,12 +225,16 @@ def BeginCombat(program) -> None:
 
     reward_message = ""
     if winner == "Player":
-        reward_message = f"Reward: {random.randint(5, 15)} points"
+        reward_message = f"Reward: +1 win"
+        player_data.wins += 1
+        player_data.SaveData()
     elif winner == "Computer":
-        reward_message = f"Reward: 0 points"
+        reward_message = ""
 
+    # Invoking a page swap & sending messages to the client.
     SwapPage(pageToAdd = program.result_page, pageToRemove = program.battleground_page)
     program.result_page.CreateRewards(result_message, reward_message)
+
 
 
 def SetupCombat(program):
@@ -198,6 +246,14 @@ def SetupCombat(program):
         3. Damaging characters.
         4. Deciding a winner.
     """
+
+    # Checking if the Player has provided all inputs needed.
+    try:
+        if len(player_data.name) == 0:
+            raise Exception("All inputs must be satisfied before moving on.")
+    except Exception as exception:
+        messagebox.showerror("Error", exception)
+        return
 
     # Swapping pages.
     SwapPage(pageToAdd = program.battleground_page, pageToRemove = program.character_selection_page)

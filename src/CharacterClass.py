@@ -3,7 +3,34 @@ READ ME:
 This file creates the character class.
 The character class is used to store the name of who the character belongs too and keeps track of the character's health.
 """
+#########################
+## LIBRARIES ##
+#########################
 
+
+#########################
+## FILES ##
+#########################
+
+
+#########################
+## VARIABLES ##
+#########################
+
+
+#########################
+## CONSTANTS ##
+#########################
+
+
+#########################
+## PRIVATE FUNCTIONS ##
+#########################
+
+
+#########################
+## CLASSES ##
+#########################
 class Character:
     """
     ABOUT THIS CLASS:
@@ -34,3 +61,8 @@ class Character:
             return True
         
         return False
+
+
+#########################
+## MAIN ##
+#########################

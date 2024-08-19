@@ -28,6 +28,7 @@ TEXT_COLOR = StyleEnum.TEXT_COLOR
 BUTTON_HOVER_COLOR = StyleEnum.BUTTON_HOVER_COLOR
 BORDER_WIDTH = StyleEnum.BORDER_WIDTH
 CORNER_RADIUS = StyleEnum.CORNER_RADIUS
+FONT = StyleEnum.FONT
 
 CHARACTER_ONE_IMAGE_PATH = "Images\BiggieCheese.png"
 CHARACTER_TWO_IMAGE_PATH = "Images\Mike.png"
@@ -71,6 +72,7 @@ def BackgroundPicker() -> ctk.CTkImage:
     ABOUT THIS FUNCTION:
     This function picks a random image from an array and assigns it as the background to the battlefield.
     """
+    
     backgrounds = [resized_beach_background_image, resized_desert_background_image, resized_forrest_background_image]
     background = backgrounds[random.randint(0, len(backgrounds)-1)]
     return background
@@ -106,8 +108,6 @@ class Program(ctk.CTk):
         self.result_page = ResultScreen(self)
 
         self.main_menu_page.pack()
-        # self.result_page.pack()
-
 
 
 class MainMenu(ctk.CTkFrame):
@@ -129,7 +129,8 @@ class MainMenu(ctk.CTkFrame):
             height = 700,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.Build()
 
@@ -148,6 +149,7 @@ class MainMenu(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
+            border_color = BORDER_COLOR
         )
         self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
 
@@ -157,7 +159,7 @@ class MainMenu(ctk.CTkFrame):
             text_color = TEXT_COLOR,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            font = ("Arial", 32, "bold")
+            font = ("Helvetica", 32, "bold"),
         ).place(relx=0.5, rely=0.5, anchor="center")
 
         self.control_frame = ctk.CTkFrame(
@@ -168,13 +170,14 @@ class MainMenu(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
+            border_color = BORDER_COLOR
         )
         self.control_frame.place(relx=0.5, rely=0.55, anchor="center")
 
         play_button = ctk.CTkButton(
             master = self.control_frame,
             text = "Play",
-            font = ("Arial", 24, "bold"),
+            font = (FONT, 24, "bold"),
             text_color = TEXT_COLOR,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
@@ -189,7 +192,7 @@ class MainMenu(ctk.CTkFrame):
         quit_button = ctk.CTkButton(
             master = self.control_frame,
             text = "Quit",
-            font = ("Arial", 24, "bold"),
+            font = (FONT, 24, "bold"),
             text_color = TEXT_COLOR,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
@@ -221,7 +224,8 @@ class CharacterSelection(ctk.CTkFrame):
             height = 700,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.Build()
      
@@ -253,6 +257,7 @@ class CharacterSelection(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
+            border_color = BORDER_COLOR
         )
         self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
 
@@ -262,7 +267,7 @@ class CharacterSelection(ctk.CTkFrame):
             text_color = TEXT_COLOR,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            font = ("Arial", 32, "bold")
+            font = (FONT, 32, "bold"),
         ).place(relx=0.5, rely=0.5, anchor="center")
 
         back_button = ctk.CTkButton(
@@ -270,13 +275,14 @@ class CharacterSelection(ctk.CTkFrame):
             width = 125,
             height = 75,
             text = "Back",
-            font = ("Arial", 16, "bold"),
+            font = (FONT, 16, "bold"),
             command = lambda: SwapPage(pageToAdd = program.main_menu_page, pageToRemove = program.character_selection_page),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR
+            hover_color = BUTTON_HOVER_COLOR,
+            border_color = BORDER_COLOR
         ).place(relx=0.875, rely=0.15, anchor="center")
 
         self.character_one = ctk.CTkButton(
@@ -290,7 +296,8 @@ class CharacterSelection(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR
+            hover_color = BUTTON_HOVER_COLOR,
+            border_color = BORDER_COLOR
         ).place(relx=0.2, rely=0.6, anchor="center")
 
         self.character_two = ctk.CTkButton(
@@ -304,7 +311,8 @@ class CharacterSelection(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR
+            hover_color = BUTTON_HOVER_COLOR,
+            border_color = BORDER_COLOR
         ).place(relx=0.5, rely=0.6, anchor="center")
 
         self.character_three_frame = ctk.CTkButton(
@@ -318,13 +326,14 @@ class CharacterSelection(ctk.CTkFrame):
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
             corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR
+            hover_color = BUTTON_HOVER_COLOR,
+            border_color = BORDER_COLOR
         ).place(relx=0.8, rely=0.6, anchor="center")
 
         username_text = ctk.CTkLabel(
             master = self,
             text = "Insert Username:",
-            font = ("Arial", 24),
+            font = (FONT, 24),
             text_color = TEXT_COLOR
         ).place(relx=0.2, rely=0.935, anchor="center")
 
@@ -333,7 +342,7 @@ class CharacterSelection(ctk.CTkFrame):
         username_entry = ctk.CTkEntry(
             master = self,
             textvariable = self.username_entry_storage,
-            font = ("Arial", 16),
+            font = (FONT, 16),
             border_color = BORDER_COLOR
         )
         username_entry.place(relx=0.415, rely=0.92)
@@ -343,13 +352,13 @@ class CharacterSelection(ctk.CTkFrame):
             text = "Submit",
             command = lambda: Backend.ValidateInput(self.username_entry_storage.get()),
             height = 50,
-            font = ("Arial", 16),
+            font = (FONT, 16),
             text_color = TEXT_COLOR,
             border_color = BORDER_COLOR,
             border_width = BORDER_WIDTH,
             bg_color = BACKGROUND_COLOR,
             fg_color = BACKGROUND_COLOR,
-            hover_color = BUTTON_HOVER_COLOR
+            hover_color = BUTTON_HOVER_COLOR,
         ).place(relx=0.8, rely = 0.935, anchor="center")
 
 
@@ -372,7 +381,8 @@ class Battleground(ctk.CTkFrame):
             height = 700,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.Build()
         self.SetupProblem()
@@ -390,7 +400,8 @@ class Battleground(ctk.CTkFrame):
             height = 500,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.background_frame.place(relx=0.5, rely=0.36, anchor="center")
 
@@ -409,6 +420,7 @@ class Battleground(ctk.CTkFrame):
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.control_frame.place(relx=0.5, rely=0.8575, anchor="center")
 
@@ -419,13 +431,14 @@ class Battleground(ctk.CTkFrame):
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.question_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         self.player_name = ctk.CTkLabel(
             master = self.question_frame,
             text = "PLAYER_NAME",
-            font = ("Arial", 24, "bold"),
+            font = (FONT, 24, "bold"),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             text_color = TEXT_COLOR
@@ -435,7 +448,7 @@ class Battleground(ctk.CTkFrame):
         self.player_health = ctk.CTkLabel(
             master = self.question_frame,
             text = "PLAYER_HEALTH",
-            font = ("Arial", 16, "bold"),
+            font = (FONT, 16, "bold"),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             text_color = TEXT_COLOR
@@ -445,7 +458,7 @@ class Battleground(ctk.CTkFrame):
         self.computer_name = ctk.CTkLabel(
             master = self.question_frame,
             text = "COMPUTER_NAME",
-            font = ("Arial", 24, "bold"),
+            font = (FONT, 24, "bold"),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             text_color = TEXT_COLOR
@@ -455,7 +468,7 @@ class Battleground(ctk.CTkFrame):
         self.computer_health = ctk.CTkLabel(
             master = self.question_frame,
             text = "COMPUTER_HEALTH",
-            font = ("Arial", 16, "bold"),
+            font = (FONT, 16, "bold"),
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
             text_color = TEXT_COLOR
@@ -464,6 +477,10 @@ class Battleground(ctk.CTkFrame):
 
         self.player_character_frame = ctk.CTkFrame(
             master = self.background_frame,
+            border_color = BORDER_COLOR,
+            border_width = BORDER_WIDTH,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
             width = 125,
             height = 125,
         )
@@ -480,6 +497,10 @@ class Battleground(ctk.CTkFrame):
 
         self.computer_character_frame = ctk.CTkFrame(
             master = self.background_frame,
+            bg_color = BACKGROUND_COLOR,
+            fg_color = FOREGROUND_COLOR,
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR,
             width = 125,
             height = 125,
         )
@@ -497,7 +518,7 @@ class Battleground(ctk.CTkFrame):
         self.question_label = ctk.CTkLabel(
             master = self.question_frame,
             text = "Test",
-            font = ("Arial", 32, "bold"),
+            font = (FONT, 32, "bold"),
             text_color = TEXT_COLOR
         )
         self.question_label.place(relx=0.5, rely=0.2, anchor="center")
@@ -509,7 +530,7 @@ class Battleground(ctk.CTkFrame):
             textvariable = self.answer_storage,
             width = 150,
             height = 40,
-            font = ("Arial", 16, "bold"),
+            font = (FONT, 16, "bold"),
             border_width = BORDER_WIDTH,
             border_color = BORDER_COLOR
         )
@@ -518,7 +539,7 @@ class Battleground(ctk.CTkFrame):
         self.submit_button = ctk.CTkButton(
             master = self.question_frame,
             text = "Submit Answer",
-            font = ("Arial", 16, "bold"),
+            font = (FONT, 16, "bold"),
             width = 25,
             height = 50,
             command = self.SubmitAnswer,
@@ -533,7 +554,7 @@ class Battleground(ctk.CTkFrame):
         self.answer_status = ctk.CTkLabel(
             master = self.question_frame,
             text = "",
-            font = ("Arial", 16),
+            font = (FONT, 16),
             text_color = TEXT_COLOR
         )
         self.answer_status.place(relx=0.65, rely=0.5, anchor="center")
@@ -569,7 +590,8 @@ class ResultScreen(ctk.CTkFrame):
             height = 700,
             bg_color = BACKGROUND_COLOR,
             fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH
+            border_width = BORDER_WIDTH,
+            border_color = BORDER_COLOR
         )
         self.Build()
      
@@ -588,7 +610,7 @@ class ResultScreen(ctk.CTkFrame):
         self.result = ctk.CTkLabel(
             master = self,
             text = "RESULT",
-            font = ("Arial", 72, "bold"),
+            font = (FONT, 72, "bold"),
             text_color = TEXT_COLOR
         )
         self.result.place(relx=0.5, rely=0.3, anchor="center")
@@ -596,7 +618,7 @@ class ResultScreen(ctk.CTkFrame):
         self.reward = ctk.CTkLabel(
             master = self,
             text = "REWARD",
-            font = ("Arial", 36),
+            font = (FONT, 36),
             text_color = TEXT_COLOR
         )
         self.reward.place(relx=0.5, rely=0.5, anchor="center")
@@ -604,7 +626,7 @@ class ResultScreen(ctk.CTkFrame):
         exit_button = ctk.CTkButton(
             master = self,
             text = "Exit",
-            font = ("Arial", 24),
+            font = (FONT, 24),
             width = 150,
             height = 50,
             command = quit,

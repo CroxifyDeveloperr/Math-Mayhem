@@ -3,13 +3,11 @@
 [✔️] Character selection [12/08/2024]
 [✔️] Battleground [13/08/2024]
 [✔️] Rewards screen [14/08/2024]
-[❌] Leaderbaord
 
 # --- BACKEND --- #
 [✔️] Combat system [14/08/2024]
-[❌] Rewards system
-[❌] Database
-    NOTE: Must use stacks and queues.
+[✔️] Rewards system [15/08/2024]
+[✔️] Database [15/08/2024]
 
 # --- MISC --- #
 [✔️] Character Creation [12/08/2024]

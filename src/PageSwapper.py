@@ -1,6 +1,7 @@
 """
 READ ME:
-This file is a peiece of utility and is responsible for swaping frames throughout the program making it seem like the Player is flicking through pages.
+This file is a peiece of utility and is responsible for swaping frames throughout the program. 
+This makes it seem like the Player is flicking through pages.
 """
 
 #########################

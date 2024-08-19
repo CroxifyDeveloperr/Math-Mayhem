@@ -1,6 +1,7 @@
 """
 READ ME:
-This file is in charge of handling the different phases of combat as well as calculating rewards and handling Player data.
+This file is in charge of handling the different phases of combat.
+This file is also in charge of calculating rewards and handling Player data.
 """
 
 #########################
@@ -9,7 +10,7 @@ This file is in charge of handling the different phases of combat as well as cal
 import customtkinter as ctk
 import operator, random, threading, time
 from tkinter import messagebox
-from PIL import Image, ImageTk
+from PIL import ImageTk
 
 
 #########################
@@ -60,7 +61,8 @@ def ChooseComputerCharacter(player_character: str):
     """
     ABOUT THIS FUNCTION:
     This function is invoked after the Player's character has been chosen.
-    This function chooses a character from the remainder and stores it so that it can be utilized when dealing with combat.
+    This function chooses a character from the remainder. 
+    Character is stored to that it can be utilizaed when dealing with combat.
     """
 
     # Grabbing possible characters.
@@ -115,7 +117,7 @@ def GenerateProblem() -> str:
         
     arithmitic_func = OPERATORS_DICT[operator]
     answer = arithmitic_func(num1, num2)
-    print(answer)
+    print(f'{problem} = {answer}')
 
     return problem, answer
 

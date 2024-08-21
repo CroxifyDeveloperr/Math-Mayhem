@@ -1,4 +1,7 @@
 """
+Name: Aden Griffin
+Date: 12/08/2024
+
 READ ME:
 This file is responsible for all the UI seen throughout the program and doesn't contain much functionality.
 """

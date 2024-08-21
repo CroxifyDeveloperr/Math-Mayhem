@@ -1,3 +1,12 @@
+"""
+NAME: Aden Griffin
+DATE: 13/08/2024
+
+READ ME:
+This file is responsible for the color constants that style the program.
+By changing a value within the file, it's new value will be applied throughout the entire program.
+"""
+
 #########################
 ## LIBRARIES ##
 #########################
@@ -23,7 +32,7 @@ TEXT_COLOR = "#FFFFFF"
 BUTTON_HOVER_COLOR = "#000000"
 BORDER_WIDTH = 4
 CORNER_RADIUS = 12
-FONT = "Futura"
+FONT = "Calibri"
 
 #########################
 ## PRIVATE FUNCTIONS ##

@@ -1,4 +1,7 @@
 """
+NAME: Aden Griffin
+DATE: 13/08/2024
+
 READ ME:
 This file is in charge of handling the different phases of combat.
 This file is also in charge of calculating rewards and handling Player data.

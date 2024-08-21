@@ -1,4 +1,7 @@
 """
+NAME: Aden Griffin
+DATE: 15/08/2024
+
 READ ME:
 This file is used to create a class for the Player's data. 
 This acts a cahce, collecting data throughout the programs lifetime and being stored in a file when required.

@@ -1,4 +1,7 @@
 """
+NAME: Aden Griffin
+DATE: 15/08/2024
+
 READ ME:
 This file creates the character class.
 The character class is used to store the name of who the character belongs too and keeps track of the character's health.

@@ -25,14 +25,14 @@ By changing a value within the file, it's new value will be applied throughout t
 #########################
 ## CONSTANTS ##
 #########################
-BACKGROUND_COLOR = "#000000"
-FOREGROUND_COLOR = "#000000"
-BORDER_COLOR = "#FFFFFF"
-TEXT_COLOR = "#FFFFFF"
+BACKGROUND_COLOR = "#232423"
+FOREGROUND_COLOR = "#232423"
+BORDER_COLOR = "#b3b5b3"
+TEXT_COLOR = "#8c8f8c"
 BUTTON_HOVER_COLOR = "#000000"
 BORDER_WIDTH = 4
 CORNER_RADIUS = 12
-FONT = "Calibri"
+FONT = "Arial"
 
 #########################
 ## PRIVATE FUNCTIONS ##

@@ -81,572 +81,580 @@ def BackgroundPicker() -> ctk.CTkImage:
     return background
 
 
-#########################
-## CLASSES ##
-#########################
-class Program(ctk.CTk):
+def Main():
     """
-    ABOUT THIS CLASS:
-    This class is responsible for the creation of the window.
-    All pages (main menu, character selection, etc) will be stored in this class making page manipulation easier.
-    The program class inherits from the Tk class, allowing us to manipulate its properties in the constructor.
+    ABOUT THIS FUNCTION:
+    This function creates the application when the function is called.
     """
-    
-    def __init__(self):
+
+    #########################
+    ## CLASSES ##
+    #########################
+    class Program(ctk.CTk):
         """
-        ABOUT THIS FUNCTION:
-        This function is a constructor, meaning it will fire automatically when an object of the program class is created.
-        This function creates the window used for the program and begins the process of customizing it.
-        Pages are also created, with the relvant page being displayed while the rest are stored away.
+        ABOUT THIS CLASS:
+        This class is responsible for the creation of the window.
+        All pages (main menu, character selection, etc) will be stored in this class making page manipulation easier.
+        The program class inherits from the Tk class, allowing us to manipulate its properties in the constructor.
         """
         
-        super().__init__()
-        self.title("Math Mayhem")
-        self.geometry("800x700")
-        self.resizable(False, False)
+        def __init__(self):
+            """
+            ABOUT THIS FUNCTION:
+            This function is a constructor, meaning it will fire automatically when an object of the program class is created.
+            This function creates the window used for the program and begins the process of customizing it.
+            Pages are also created, with the relvant page being displayed while the rest are stored away.
+            """
+            
+            super().__init__()
+            self.title("Math Mayhem")
+            self.geometry("800x700")
+            self.resizable(False, False)
 
-        self.main_menu_page = MainMenu(self)
-        self.character_selection_page = CharacterSelection(self)
-        self.battleground_page = Battleground(self)
-        self.result_page = ResultScreen(self)
+            self.main_menu_page = MainMenu(self)
+            self.character_selection_page = CharacterSelection(self)
+            self.battleground_page = Battleground(self)
+            self.result_page = ResultScreen(self)
 
-        self.main_menu_page.pack()
+            self.main_menu_page.pack()
 
 
-class MainMenu(ctk.CTkFrame):
-    """
-    ABOUT THIS CLASS:
-    This class is responsible for the creation and style of the main menu page.
-    """
-
-    def __init__(self, parent):
+    class MainMenu(ctk.CTkFrame):
         """
-        ABOUT THIS FUNCTION:
-        This function is a constructor, meaning it will fire automatically when an object of the main menu class is created.
-        This function creates the inital frame which can later be built.
-        """
-
-        super().__init__(
-            master = parent,
-            width = 800,
-            height = 700,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.Build()
-
-
-    def Build(self):
-        """
-        ABOUT THIS FUNCTION:
-        This function takes the created frame and adds widgets to them. These widgets are then customized.
-        """
-        
-        self.title_frame = ctk.CTkFrame(
-            master = self,
-            width = 400,
-            height = 100,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            border_color = BORDER_COLOR
-        )
-        self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
-
-        title = ctk.CTkLabel(
-            master = self.title_frame,
-            text = "Math Mayhem",
-            text_color = TEXT_COLOR,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            font = ("Helvetica", 32, "bold"),
-        ).place(relx=0.5, rely=0.5, anchor="center")
-
-        self.control_frame = ctk.CTkFrame(
-            master = self,
-            width = 400,
-            height = 300,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            border_color = BORDER_COLOR
-        )
-        self.control_frame.place(relx=0.5, rely=0.55, anchor="center")
-
-        play_button = ctk.CTkButton(
-            master = self.control_frame,
-            text = "Play",
-            font = (FONT, 24, "bold"),
-            text_color = TEXT_COLOR,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            hover_color = BUTTON_HOVER_COLOR,
-            width = 200,
-            height = 75,
-            command = lambda: SwapPage(pageToAdd = program.character_selection_page, pageToRemove = program.main_menu_page)
-        ).place(relx=0.5, rely=0.30, anchor="center")
-
-        quit_button = ctk.CTkButton(
-            master = self.control_frame,
-            text = "Quit",
-            font = (FONT, 24, "bold"),
-            text_color = TEXT_COLOR,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            hover_color = BUTTON_HOVER_COLOR,
-            width = 200,
-            height = 75,
-            command = quit
-        ).place(relx=0.5, rely=0.7, anchor="center")
-
-
-
-class CharacterSelection(ctk.CTkFrame):
-    """
-    ABOUT THIS CLASS:
-    This class is responsible for the creation and style of the character selection page.
-    """
-     
-    def __init__(self, parent):
-        """
-        ABOUT THIS FUNCTION:
-        This function is a constructor, meaning it will fire automatically when an object of the character selection class is created.
-        This function creates the inital frame which can later be built.
-        """
-        super().__init__(
-            master = parent,
-            width = 800,
-            height = 700,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.Build()
-     
-
-    def SetupCombat(self, selected_character: str):
-        """
-        ABOUT THIS FUNCTION:
-        This function has two purposes:
-            1. To send the Player's selected character over to CombatHandler.
-            2. To invoke the SwapPage function so that the Player can see the battlefield and begin fighting.
-            3. To send relevant information to the backend / combat handler.
-        """
-        Backend.PlayerCharacterSelected(character_name = selected_character)
-        Backend.ChooseComputerCharacter(player_character = selected_character)
-        Backend.SetupCombat(program)
-
-
-    def Build(self):
-        """
-        ABOUT THIS FUNCTION:
-        This function takes the created frame and adds widgets to them. These widgets are then customized.
+        ABOUT THIS CLASS:
+        This class is responsible for the creation and style of the main menu page.
         """
 
-        self.title_frame = ctk.CTkFrame(
-            master = self,
-            width = 400,
-            height = 100,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            border_color = BORDER_COLOR
-        )
-        self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
+        def __init__(self, parent):
+            """
+            ABOUT THIS FUNCTION:
+            This function is a constructor, meaning it will fire automatically when an object of the main menu class is created.
+            This function creates the inital frame which can later be built.
+            """
 
-        title = ctk.CTkLabel(
-            master = self.title_frame,
-            text = "Character Selection",
-            text_color = TEXT_COLOR,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            font = (FONT, 32, "bold"),
-        ).place(relx=0.5, rely=0.5, anchor="center")
+            super().__init__(
+                master = parent,
+                width = 800,
+                height = 700,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.Build()
 
-        back_button = ctk.CTkButton(
-            master = self,
-            width = 125,
-            height = 75,
-            text = "Back",
-            font = (FONT, 16, "bold"),
-            command = lambda: SwapPage(pageToAdd = program.main_menu_page, pageToRemove = program.character_selection_page),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR,
-            border_color = BORDER_COLOR
-        ).place(relx=0.875, rely=0.15, anchor="center")
 
-        self.character_one = ctk.CTkButton(
-            master = self,
-            width = 200,
-            height = 400,
-            text = "",
-            command = lambda: self.SetupCombat(selected_character = "CharacterOne"),
-            image = ImageTk.PhotoImage(resized_character_one_image),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR,
-            border_color = BORDER_COLOR
-        ).place(relx=0.2, rely=0.6, anchor="center")
+        def Build(self):
+            """
+            ABOUT THIS FUNCTION:
+            This function takes the created frame and adds widgets to them. These widgets are then customized.
+            """
+            
+            self.title_frame = ctk.CTkFrame(
+                master = self,
+                width = 400,
+                height = 100,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                border_color = BORDER_COLOR
+            )
+            self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
 
-        self.character_two = ctk.CTkButton(
-            master = self,
-            width = 200,
-            height = 400,
-            text = "",
-            command = lambda: self.SetupCombat(selected_character = "CharacterTwo"),
-            image = ImageTk.PhotoImage(resized_character_two_image),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR,
-            border_color = BORDER_COLOR
-        ).place(relx=0.5, rely=0.6, anchor="center")
+            title = ctk.CTkLabel(
+                master = self.title_frame,
+                text = "Math Mayhem",
+                text_color = TEXT_COLOR,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                font = ("Helvetica", 32, "bold"),
+            ).place(relx=0.5, rely=0.5, anchor="center")
 
-        self.character_three_frame = ctk.CTkButton(
-            master = self,
-            width = 200,
-            height = 400,
-            text = "",
-            command = lambda: self.SetupCombat(selected_character = "CharacterThree"),
-            image = ImageTk.PhotoImage(resized_character_three_image),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            corner_radius = CORNER_RADIUS,
-            hover_color = BUTTON_HOVER_COLOR,
-            border_color = BORDER_COLOR
-        ).place(relx=0.8, rely=0.6, anchor="center")
+            self.control_frame = ctk.CTkFrame(
+                master = self,
+                width = 400,
+                height = 300,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                border_color = BORDER_COLOR
+            )
+            self.control_frame.place(relx=0.5, rely=0.55, anchor="center")
 
-        username_text = ctk.CTkLabel(
-            master = self,
-            text = "Insert Username:",
-            font = (FONT, 24),
-            text_color = TEXT_COLOR
-        ).place(relx=0.2, rely=0.935, anchor="center")
+            play_button = ctk.CTkButton(
+                master = self.control_frame,
+                text = "Play",
+                font = (FONT, 24, "bold"),
+                text_color = TEXT_COLOR,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_color = BORDER_COLOR,
+                border_width = BORDER_WIDTH,
+                hover_color = BUTTON_HOVER_COLOR,
+                width = 200,
+                height = 75,
+                command = lambda: SwapPage(pageToAdd = program.character_selection_page, pageToRemove = program.main_menu_page)
+            ).place(relx=0.5, rely=0.30, anchor="center")
 
-        self.username_entry_storage = ctk.StringVar(master = self)
-        
-        username_entry = ctk.CTkEntry(
-            master = self,
-            textvariable = self.username_entry_storage,
-            font = (FONT, 16),
-            border_color = BORDER_COLOR
-        )
-        username_entry.place(relx=0.415, rely=0.92)
-
-        user_name_submission = ctk.CTkButton(
-            master = self,
-            text = "Submit",
-            command = lambda: Backend.ValidateInput(self.username_entry_storage.get()),
-            height = 50,
-            font = (FONT, 16),
-            text_color = TEXT_COLOR,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = BACKGROUND_COLOR,
-            hover_color = BUTTON_HOVER_COLOR,
-        ).place(relx=0.8, rely = 0.935, anchor="center")
+            quit_button = ctk.CTkButton(
+                master = self.control_frame,
+                text = "Quit",
+                font = (FONT, 24, "bold"),
+                text_color = TEXT_COLOR,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_color = BORDER_COLOR,
+                border_width = BORDER_WIDTH,
+                hover_color = BUTTON_HOVER_COLOR,
+                width = 200,
+                height = 75,
+                command = quit
+            ).place(relx=0.5, rely=0.7, anchor="center")
 
 
 
-class Battleground(ctk.CTkFrame):
-    """
-    ABOUT THIS CLASS:
-    This class is responsible for the creation and style of the battleground page.
-    """
-     
-    def __init__(self, parent):
+    class CharacterSelection(ctk.CTkFrame):
         """
-        ABOUT THIS FUNCTION:
-        This function is a constructor, meaning it will fire automatically when an object of the battleground class is created.
-        This function creates the inital frame which can later be built.
-        """
-        super().__init__(
-            master = parent,
-            width = 800,
-            height = 700,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.Build()
-        self.SetupProblem()
-
-
-    def Build(self):
-        """
-        ABOUT THIS FUNCTION:
-        This function takes the created frame and adds widgets to them. These widgets are then customized.
+        ABOUT THIS CLASS:
+        This class is responsible for the creation and style of the character selection page.
         """
         
-        self.background_frame = ctk.CTkFrame(
-            master = self,
-            width = 800,
-            height = 500,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.background_frame.place(relx=0.5, rely=0.36, anchor="center")
+        def __init__(self, parent):
+            """
+            ABOUT THIS FUNCTION:
+            This function is a constructor, meaning it will fire automatically when an object of the character selection class is created.
+            This function creates the inital frame which can later be built.
+            """
+            super().__init__(
+                master = parent,
+                width = 800,
+                height = 700,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.Build()
+        
 
-        background_holder = ctk.CTkLabel(
-            master = self.background_frame,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            text = "",
-            image = ImageTk.PhotoImage(BackgroundPicker())
-        ).place(relx=0.5, rely=0.5, anchor="center")
-
-        self.control_frame = ctk.CTkFrame(
-            master = self,
-            width = 800,
-            height = 200,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.control_frame.place(relx=0.5, rely=0.8575, anchor="center")
-
-        self.question_frame = ctk.CTkFrame(
-            master = self.control_frame,
-            width = 800,
-            height = 200,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.question_frame.place(relx=0.5, rely=0.5, anchor="center")
-
-        self.player_name = ctk.CTkLabel(
-            master = self.question_frame,
-            text = "PLAYER_NAME",
-            font = (FONT, 24, "bold"),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            text_color = TEXT_COLOR
-        )
-        self.player_name.place(relx=0.15, rely=0.25, anchor="center")
-
-        self.player_health = ctk.CTkLabel(
-            master = self.question_frame,
-            text = "PLAYER_HEALTH",
-            font = (FONT, 16, "bold"),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            text_color = TEXT_COLOR
-        )
-        self.player_health.place(relx=0.15, rely=0.45, anchor="center")
-
-        self.computer_name = ctk.CTkLabel(
-            master = self.question_frame,
-            text = "COMPUTER_NAME",
-            font = (FONT, 24, "bold"),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            text_color = TEXT_COLOR
-        )
-        self.computer_name.place(relx=0.85, rely=0.25, anchor="center")
-
-        self.computer_health = ctk.CTkLabel(
-            master = self.question_frame,
-            text = "COMPUTER_HEALTH",
-            font = (FONT, 16, "bold"),
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            text_color = TEXT_COLOR
-        )
-        self.computer_health.place(relx=0.85, rely=0.45, anchor="center")
-
-        self.player_character_frame = ctk.CTkFrame(
-            master = self.background_frame,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            width = 125,
-            height = 125,
-        )
-        self.player_character_frame.place(relx=0.15, rely=0.7, anchor="center")
-
-        self.player_character_image = ctk.CTkLabel(
-            master = self.player_character_frame,
-            width = 150,
-            height = 150,
-            text = "",
-            image = None
-        )
-        self.player_character_image.place(relx=0.5, rely=0.5, anchor="center")
-
-        self.computer_character_frame = ctk.CTkFrame(
-            master = self.background_frame,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR,
-            width = 125,
-            height = 125,
-        )
-        self.computer_character_frame.place(relx=0.85, rely=0.7, anchor="center")
-
-        self.computer_character_image = ctk.CTkLabel(
-            master = self.computer_character_frame,
-            width = 150,
-            height = 150,
-            text = "",
-            image = None
-        )
-        self.computer_character_image.place(relx=0.5, rely=0.5, anchor="center")
-
-        self.question_label = ctk.CTkLabel(
-            master = self.question_frame,
-            text = "Test",
-            font = (FONT, 32, "bold"),
-            text_color = TEXT_COLOR
-        )
-        self.question_label.place(relx=0.5, rely=0.2, anchor="center")
-
-        self.answer_storage = ctk.StringVar(master = self)
-
-        self.answer_entry = ctk.CTkEntry(
-            master = self.question_frame,
-            textvariable = self.answer_storage,
-            width = 150,
-            height = 40,
-            font = (FONT, 16, "bold"),
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.answer_entry.place(relx=0.5, rely=0.5, anchor="center")
-
-        self.submit_button = ctk.CTkButton(
-            master = self.question_frame,
-            text = "Submit Answer",
-            font = (FONT, 16, "bold"),
-            width = 25,
-            height = 50,
-            command = self.SubmitAnswer,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            hover_color = BUTTON_HOVER_COLOR
-        )
-        self.submit_button.place(relx=0.5, rely=0.8, anchor="center")
-
-        self.answer_status = ctk.CTkLabel(
-            master = self.question_frame,
-            text = "",
-            font = (FONT, 16),
-            text_color = TEXT_COLOR
-        )
-        self.answer_status.place(relx=0.65, rely=0.5, anchor="center")
+        def SetupCombat(self, selected_character: str):
+            """
+            ABOUT THIS FUNCTION:
+            This function has two purposes:
+                1. To send the Player's selected character over to CombatHandler.
+                2. To invoke the SwapPage function so that the Player can see the battlefield and begin fighting.
+                3. To send relevant information to the backend / combat handler.
+            """
+            Backend.PlayerCharacterSelected(character_name = selected_character)
+            Backend.ChooseComputerCharacter(player_character = selected_character)
+            Backend.SetupCombat(program)
 
 
-    def SetupProblem(self):
-        problem, self.answer = Backend.GenerateProblem()
-        self.question_label.configure(text = f"{problem} = ?")
+        def Build(self):
+            """
+            ABOUT THIS FUNCTION:
+            This function takes the created frame and adds widgets to them. These widgets are then customized.
+            """
 
-    
-    def SubmitAnswer(self):
-        Backend.ValidateAnswer(self, self.answer_entry, self.answer)
-        self.SetupProblem()
+            self.title_frame = ctk.CTkFrame(
+                master = self,
+                width = 400,
+                height = 100,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                border_color = BORDER_COLOR
+            )
+            self.title_frame.place(relx=0.5, rely=0.15, anchor="center")
+
+            title = ctk.CTkLabel(
+                master = self.title_frame,
+                text = "Character Selection",
+                text_color = TEXT_COLOR,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                font = (FONT, 32, "bold"),
+            ).place(relx=0.5, rely=0.5, anchor="center")
+
+            back_button = ctk.CTkButton(
+                master = self,
+                width = 125,
+                height = 75,
+                text = "Back",
+                font = (FONT, 16, "bold"),
+                command = lambda: SwapPage(pageToAdd = program.main_menu_page, pageToRemove = program.character_selection_page),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                hover_color = BUTTON_HOVER_COLOR,
+                border_color = BORDER_COLOR
+            ).place(relx=0.875, rely=0.15, anchor="center")
+
+            self.character_one = ctk.CTkButton(
+                master = self,
+                width = 200,
+                height = 400,
+                text = "",
+                command = lambda: self.SetupCombat(selected_character = "CharacterOne"),
+                image = ImageTk.PhotoImage(resized_character_one_image),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                hover_color = BUTTON_HOVER_COLOR,
+                border_color = BORDER_COLOR
+            ).place(relx=0.2, rely=0.6, anchor="center")
+
+            self.character_two = ctk.CTkButton(
+                master = self,
+                width = 200,
+                height = 400,
+                text = "",
+                command = lambda: self.SetupCombat(selected_character = "CharacterTwo"),
+                image = ImageTk.PhotoImage(resized_character_two_image),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                hover_color = BUTTON_HOVER_COLOR,
+                border_color = BORDER_COLOR
+            ).place(relx=0.5, rely=0.6, anchor="center")
+
+            self.character_three_frame = ctk.CTkButton(
+                master = self,
+                width = 200,
+                height = 400,
+                text = "",
+                command = lambda: self.SetupCombat(selected_character = "CharacterThree"),
+                image = ImageTk.PhotoImage(resized_character_three_image),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                corner_radius = CORNER_RADIUS,
+                hover_color = BUTTON_HOVER_COLOR,
+                border_color = BORDER_COLOR
+            ).place(relx=0.8, rely=0.6, anchor="center")
+
+            username_text = ctk.CTkLabel(
+                master = self,
+                text = "Insert Username:",
+                font = (FONT, 24),
+                text_color = TEXT_COLOR
+            ).place(relx=0.2, rely=0.935, anchor="center")
+
+            self.username_entry_storage = ctk.StringVar(master = self)
+            
+            username_entry = ctk.CTkEntry(
+                master = self,
+                textvariable = self.username_entry_storage,
+                font = (FONT, 16),
+                border_color = BORDER_COLOR
+            )
+            username_entry.place(relx=0.415, rely=0.92)
+
+            user_name_submission = ctk.CTkButton(
+                master = self,
+                text = "Submit",
+                command = lambda: Backend.ValidateInput(self.username_entry_storage.get()),
+                height = 50,
+                font = (FONT, 16),
+                text_color = TEXT_COLOR,
+                border_color = BORDER_COLOR,
+                border_width = BORDER_WIDTH,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = BACKGROUND_COLOR,
+                hover_color = BUTTON_HOVER_COLOR,
+            ).place(relx=0.8, rely = 0.935, anchor="center")
 
 
 
-class ResultScreen(ctk.CTkFrame):
-    """
-    ABOUT THIS CLASS:
-    This class is responsible for the creation and style of the result screen page.
-    """
-     
-    def __init__(self, parent):
+    class Battleground(ctk.CTkFrame):
         """
-        ABOUT THIS FUNCTION:
-        This function is a constructor, meaning it will fire automatically when an object of the result screen class is created.
-        This function creates the inital frame which can later be built.
+        ABOUT THIS CLASS:
+        This class is responsible for the creation and style of the battleground page.
         """
+        
+        def __init__(self, parent):
+            """
+            ABOUT THIS FUNCTION:
+            This function is a constructor, meaning it will fire automatically when an object of the battleground class is created.
+            This function creates the inital frame which can later be built.
+            """
+            super().__init__(
+                master = parent,
+                width = 800,
+                height = 700,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.Build()
+            self.SetupProblem()
 
-        super().__init__(
-            master = parent,
-            width = 800,
-            height = 700,
-            bg_color = BACKGROUND_COLOR,
-            fg_color = FOREGROUND_COLOR,
-            border_width = BORDER_WIDTH,
-            border_color = BORDER_COLOR
-        )
-        self.Build()
-     
-    
-    def CreateRewards(self, result_message, reward_message):
-        self.result.configure(text = result_message)
-        self.reward.configure(text = reward_message)
+
+        def Build(self):
+            """
+            ABOUT THIS FUNCTION:
+            This function takes the created frame and adds widgets to them. These widgets are then customized.
+            """
+            
+            self.background_frame = ctk.CTkFrame(
+                master = self,
+                width = 800,
+                height = 500,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.background_frame.place(relx=0.5, rely=0.36, anchor="center")
+
+            background_holder = ctk.CTkLabel(
+                master = self.background_frame,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                text = "",
+                image = ImageTk.PhotoImage(BackgroundPicker())
+            ).place(relx=0.5, rely=0.5, anchor="center")
+
+            self.control_frame = ctk.CTkFrame(
+                master = self,
+                width = 800,
+                height = 200,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.control_frame.place(relx=0.5, rely=0.8575, anchor="center")
+
+            self.question_frame = ctk.CTkFrame(
+                master = self.control_frame,
+                width = 800,
+                height = 200,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.question_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+            self.player_name = ctk.CTkLabel(
+                master = self.question_frame,
+                text = "PLAYER_NAME",
+                font = (FONT, 24, "bold"),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                text_color = TEXT_COLOR
+            )
+            self.player_name.place(relx=0.15, rely=0.25, anchor="center")
+
+            self.player_health = ctk.CTkLabel(
+                master = self.question_frame,
+                text = "PLAYER_HEALTH",
+                font = (FONT, 16, "bold"),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                text_color = TEXT_COLOR
+            )
+            self.player_health.place(relx=0.15, rely=0.45, anchor="center")
+
+            self.computer_name = ctk.CTkLabel(
+                master = self.question_frame,
+                text = "COMPUTER_NAME",
+                font = (FONT, 24, "bold"),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                text_color = TEXT_COLOR
+            )
+            self.computer_name.place(relx=0.85, rely=0.25, anchor="center")
+
+            self.computer_health = ctk.CTkLabel(
+                master = self.question_frame,
+                text = "COMPUTER_HEALTH",
+                font = (FONT, 16, "bold"),
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                text_color = TEXT_COLOR
+            )
+            self.computer_health.place(relx=0.85, rely=0.45, anchor="center")
+
+            self.player_character_frame = ctk.CTkFrame(
+                master = self.background_frame,
+                border_color = BORDER_COLOR,
+                border_width = BORDER_WIDTH,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                width = 125,
+                height = 125,
+            )
+            self.player_character_frame.place(relx=0.15, rely=0.7, anchor="center")
+
+            self.player_character_image = ctk.CTkLabel(
+                master = self.player_character_frame,
+                width = 150,
+                height = 150,
+                text = "",
+                image = None
+            )
+            self.player_character_image.place(relx=0.5, rely=0.5, anchor="center")
+
+            self.computer_character_frame = ctk.CTkFrame(
+                master = self.background_frame,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR,
+                width = 125,
+                height = 125,
+            )
+            self.computer_character_frame.place(relx=0.85, rely=0.7, anchor="center")
+
+            self.computer_character_image = ctk.CTkLabel(
+                master = self.computer_character_frame,
+                width = 150,
+                height = 150,
+                text = "",
+                image = None
+            )
+            self.computer_character_image.place(relx=0.5, rely=0.5, anchor="center")
+
+            self.question_label = ctk.CTkLabel(
+                master = self.question_frame,
+                text = "Test",
+                font = (FONT, 32, "bold"),
+                text_color = TEXT_COLOR
+            )
+            self.question_label.place(relx=0.5, rely=0.2, anchor="center")
+
+            self.answer_storage = ctk.StringVar(master = self)
+
+            self.answer_entry = ctk.CTkEntry(
+                master = self.question_frame,
+                textvariable = self.answer_storage,
+                width = 150,
+                height = 40,
+                font = (FONT, 16, "bold"),
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.answer_entry.place(relx=0.5, rely=0.5, anchor="center")
+
+            self.submit_button = ctk.CTkButton(
+                master = self.question_frame,
+                text = "Submit Answer",
+                font = (FONT, 16, "bold"),
+                width = 25,
+                height = 50,
+                command = self.SubmitAnswer,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_color = BORDER_COLOR,
+                border_width = BORDER_WIDTH,
+                hover_color = BUTTON_HOVER_COLOR
+            )
+            self.submit_button.place(relx=0.5, rely=0.8, anchor="center")
+
+            self.answer_status = ctk.CTkLabel(
+                master = self.question_frame,
+                text = "",
+                font = (FONT, 16),
+                text_color = TEXT_COLOR
+            )
+            self.answer_status.place(relx=0.65, rely=0.5, anchor="center")
 
 
-    def Build(self):
+        def SetupProblem(self):
+            problem, self.answer = Backend.GenerateProblem()
+            self.question_label.configure(text = f"{problem} = ?")
+
+        
+        def SubmitAnswer(self):
+            Backend.ValidateAnswer(self, self.answer_entry, self.answer)
+            self.SetupProblem()
+
+
+
+    class ResultScreen(ctk.CTkFrame):
         """
-        ABOUT THIS FUNCTION:
-        This function takes the created frame and adds widgets to them. These widgets are then customized.
+        ABOUT THIS CLASS:
+        This class is responsible for the creation and style of the result screen page.
         """
+        
+        def __init__(self, parent):
+            """
+            ABOUT THIS FUNCTION:
+            This function is a constructor, meaning it will fire automatically when an object of the result screen class is created.
+            This function creates the inital frame which can later be built.
+            """
 
-        self.result = ctk.CTkLabel(
-            master = self,
-            text = "RESULT",
-            font = (FONT, 72, "bold"),
-            text_color = TEXT_COLOR
-        )
-        self.result.place(relx=0.5, rely=0.3, anchor="center")
-
-        self.reward = ctk.CTkLabel(
-            master = self,
-            text = "REWARD",
-            font = (FONT, 36),
-            text_color = TEXT_COLOR
-        )
-        self.reward.place(relx=0.5, rely=0.5, anchor="center")
-
-        exit_button = ctk.CTkButton(
-            master = self,
-            text = "Exit",
-            font = (FONT, 24),
-            width = 150,
-            height = 50,
-            command = quit,
-            text_color = TEXT_COLOR,
-            fg_color = BACKGROUND_COLOR,
-            bg_color = BACKGROUND_COLOR,
-            border_color = BORDER_COLOR,
-            border_width = BORDER_WIDTH,
-            hover_color = BUTTON_HOVER_COLOR
-        )
-        exit_button.place(relx=0.5, rely=0.75, anchor="center")
+            super().__init__(
+                master = parent,
+                width = 800,
+                height = 700,
+                bg_color = BACKGROUND_COLOR,
+                fg_color = FOREGROUND_COLOR,
+                border_width = BORDER_WIDTH,
+                border_color = BORDER_COLOR
+            )
+            self.Build()
+        
+        
+        def CreateRewards(self, result_message, reward_message):
+            self.result.configure(text = result_message)
+            self.reward.configure(text = reward_message)
 
 
+        def Build(self):
+            """
+            ABOUT THIS FUNCTION:
+            This function takes the created frame and adds widgets to them. These widgets are then customized.
+            """
 
-#########################
-## MAIN ##
-#########################
-if __name__ == "__main__":
-    program = Program()
-    program.mainloop()
+            self.result = ctk.CTkLabel(
+                master = self,
+                text = "RESULT",
+                font = (FONT, 72, "bold"),
+                text_color = TEXT_COLOR
+            )
+            self.result.place(relx=0.5, rely=0.3, anchor="center")
+
+            self.reward = ctk.CTkLabel(
+                master = self,
+                text = "REWARD",
+                font = (FONT, 36),
+                text_color = TEXT_COLOR
+            )
+            self.reward.place(relx=0.5, rely=0.5, anchor="center")
+
+            exit_button = ctk.CTkButton(
+                master = self,
+                text = "Exit",
+                font = (FONT, 24),
+                width = 150,
+                height = 50,
+                command = quit,
+                text_color = TEXT_COLOR,
+                fg_color = BACKGROUND_COLOR,
+                bg_color = BACKGROUND_COLOR,
+                border_color = BORDER_COLOR,
+                border_width = BORDER_WIDTH,
+                hover_color = BUTTON_HOVER_COLOR
+            )
+            exit_button.place(relx=0.5, rely=0.75, anchor="center")
+
+
+
+    #########################
+    ## MAIN ##
+    #########################
+    if __name__ == "__main__":
+        program = Program()
+        program.mainloop()
+
+Main()

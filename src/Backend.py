@@ -133,17 +133,20 @@ def ValidateAnswer(battleground, answer_storage: ctk.StringVar, answer: str):
     try:
         player_answer = answer_storage.get()
 
-        # Checking if the Player has left the textbox empty.
-        if len(player_answer) == 0:
-            raise Exception("Input cannot be left empty.")
-        
-        # Checking if the Player has inserted alphabetical characters or white space.
-        for i in player_answer:
-            if i.isalpha():
-                raise Exception("Input can only contain numerical values.")
-            elif i.isspace():
-                raise Exception("Input cannot contain any spaces.")
-        
+        for char in player_answer:
+
+            # Checking if character is white space.
+            if char.isspace():
+                raise Exception("Input can not contain any white spaces.")
+            
+            # Checking if character is negative symbol.
+            elif char == "-" and len(player_answer) > 1:
+                continue
+
+            # Checking if character isnt a numeric value.
+            elif not char.isdigit():
+                raise Exception("Input can only contain numeric values.")
+                     
         # Checking if the Player's answer is correct.
         if answer == int(player_answer):
             battleground.answer_status.configure(text = "✔️")
